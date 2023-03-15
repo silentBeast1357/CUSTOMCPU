@@ -30,13 +30,13 @@ type htoi(string hex)
 {
     type output = 0;
     int64_t multiplier = 1;
-    rHex = reverse(hex);
+    string rHex = reverse(hex);
     for (int32_t i=0;i<hex.length();i++)
     {
         if (rHex[i] >= 0 && rHex[i] <= 9)
-            output += multiplier*(rHex[i]-48)
+            output += multiplier*(rHex[i]-48);
         else if (rHex[i] >= 'A' && rHex[i] <= 'F')
-            output += multiplier*(rHex[i]-'A'+10)
+            output += multiplier*(rHex[i]-'A'+10);
         multiplier *= 16;
     }
 
@@ -83,6 +83,11 @@ int32_t main(int32_t argc, char** argv)
     }
 
     printVector(instructions);
+
+    for (int i=0;i<instructions.size();i++)
+    {
+        cout << htoi<uint64_t>(instructions[i]) << endl;
+    }
 
     return 0;
 }
