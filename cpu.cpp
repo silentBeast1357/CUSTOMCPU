@@ -14,6 +14,35 @@ void printVector(vector<t> a)
     cout << "\n";
 }
 
+
+
+string reverse(string text)
+{
+    string output = "";
+    for (int32_t i=0;i<text.length();i++)
+        output += text[i];
+    return output;
+}
+
+
+template<typename type>
+type htoi(string hex)
+{
+    type output = 0;
+    int64_t multiplier = 1;
+    rHex = reverse(hex);
+    for (int32_t i=0;i<hex.length();i++)
+    {
+        if (rHex[i] >= 0 && rHex[i] <= 9)
+            output += multiplier*(rHex[i]-48)
+        else if (rHex[i] >= 'A' && rHex[i] <= 'F')
+            output += multiplier*(rHex[i]-'A'+10)
+        multiplier *= 16;
+    }
+
+    return output;
+}
+
 int32_t main(int32_t argc, char** argv)
 {
     if (argc != 2)
