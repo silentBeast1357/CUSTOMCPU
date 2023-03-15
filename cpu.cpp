@@ -19,8 +19,8 @@ void printVector(vector<t> a)
 string reverse(string text)
 {
     string output = "";
-    for (int32_t i=0;i<text.length();i++)
-        output += text[i];
+    for (int32_t i=text.length();i>0;i--)
+        output += text[i-1];
     return output;
 }
 
@@ -31,12 +31,17 @@ type htoi(string hex)
     type output = 0;
     int64_t multiplier = 1;
     string rHex = reverse(hex);
+    cout << "----" << rHex << endl;
     for (int32_t i=0;i<hex.length();i++)
     {
-        if (rHex[i] >= 0 && rHex[i] <= 9)
+        if (rHex[i] >= '0' && rHex[i] <= '9')
+        {
             output += multiplier*(rHex[i]-48);
+        }
         else if (rHex[i] >= 'A' && rHex[i] <= 'F')
+        {
             output += multiplier*(rHex[i]-'A'+10);
+        }
         multiplier *= 16;
     }
 
