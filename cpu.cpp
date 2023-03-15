@@ -35,13 +35,9 @@ type htoi(string hex)
     for (int32_t i=0;i<hex.length();i++)
     {
         if (rHex[i] >= '0' && rHex[i] <= '9')
-        {
             output += multiplier*(rHex[i]-48);
-        }
         else if (rHex[i] >= 'A' && rHex[i] <= 'F')
-        {
             output += multiplier*(rHex[i]-'A'+10);
-        }
         multiplier *= 16;
     }
 
