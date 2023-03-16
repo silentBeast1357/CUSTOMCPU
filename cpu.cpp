@@ -14,8 +14,6 @@ void printVector(vector<t> a)
     cout << "\n";
 }
 
-
-
 string reverse(string text)
 {
     string output = "";
@@ -31,7 +29,6 @@ type htoi(string hex)
     type output = 0;
     int64_t multiplier = 1;
     string rHex = reverse(hex);
-    cout << "----" << rHex << endl;
     for (int32_t i=0;i<hex.length();i++)
     {
         if (rHex[i] >= '0' && rHex[i] <= '9')
@@ -42,6 +39,22 @@ type htoi(string hex)
     }
 
     return output;
+}
+
+struct instructionInfo 
+{
+    string opcode;
+    string opperand;
+    string instruction;
+    uint8_t opcodeI;
+    uint64_t opperandI;
+};
+
+void printInsDat(instructionInfo ins)
+{
+    cout << "Instruction: " << ins.instruction << endl
+    << "Opcode: " << ins.opcode << ", " << (uint32_t)ins.opcodeI << endl
+    << "Opperand: " << ins.opperand << ", " << ins.opperandI << endl;
 }
 
 int32_t main(int32_t argc, char** argv)
@@ -73,7 +86,7 @@ int32_t main(int32_t argc, char** argv)
 
     vector<string> instructions;
     string tmpStr;
-    for (int64_t i=0;i<filelength;i++)
+    for (uint64_t i=0;i<filelength;i++)
     {
         tmpStr += fileContents[i];
         if ((i+1)%16 == 0)
@@ -83,11 +96,21 @@ int32_t main(int32_t argc, char** argv)
         }
     }
 
-    printVector(instructions);
-
-    for (int i=0;i<instructions.size();i++)
+    vector<instructionInfo> dInstructions;
+    for (uint64_t i=0;i<instructions.size();i++)
     {
-        cout << htoi<uint64_t>(instructions[i]) << endl;
+        instructionInfo dIns;
+        dIns.instruction = instructions[i];
+        dIns.opcode = instructions[i][0];
+        dIns.opperand = instructions[i].substr(1,15);
+        dIns.opcodeI = htoi<uint8_t>(dIns.opcode);
+        dIns.opperandI = htoi<uint64_t>(dIns.opperand);
+        dInstructions.push_back(dIns);
+    }
+
+    for (int64_t i=0;i<dInstructions.size();i++)
+    {
+        printInsDat(dInstructions[i]);
     }
 
     return 0;
