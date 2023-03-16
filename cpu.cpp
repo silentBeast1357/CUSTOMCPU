@@ -9,7 +9,7 @@ using namespace std;
 template<typename t>
 void printVector(vector<t> a)
 {
-    for (int32_t i=0;i<a.size();i++)
+    for (uint32_t i=0;i<a.size();i++)
         cout << a[i] << ", ";
     cout << "\n";
 }
@@ -17,7 +17,7 @@ void printVector(vector<t> a)
 string reverse(string text)
 {
     string output = "";
-    for (int32_t i=text.length();i>0;i--)
+    for (uint32_t i=text.length();i>0;i--)
         output += text[i-1];
     return output;
 }
@@ -29,7 +29,7 @@ type htoi(string hex)
     type output = 0;
     int64_t multiplier = 1;
     string rHex = reverse(hex);
-    for (int32_t i=0;i<hex.length();i++)
+    for (uint32_t i=0;i<hex.length();i++)
     {
         if (rHex[i] >= '0' && rHex[i] <= '9')
             output += multiplier*(rHex[i]-48);
@@ -77,7 +77,7 @@ int32_t main(int32_t argc, char** argv)
         fileContents += line;
     File.close();
 
-    int64_t filelength = fileContents.length();
+    uint64_t filelength = fileContents.length();
     if (filelength % 16 != 0)
     {
         cout << "Error: File is of incorrect length" << endl;
@@ -108,10 +108,19 @@ int32_t main(int32_t argc, char** argv)
         dInstructions.push_back(dIns);
     }
 
-    for (int64_t i=0;i<dInstructions.size();i++)
+    for (uint64_t i=0;i<dInstructions.size();i++)
     {
-        printInsDat(dInstructions[i]);
+        instructionInfo current = dInstructions[i];
+
+        if (current.opcode=="F")
+        {
+            if (current.opperand == "FFFFFFFFFFFFFFF")
+            {
+                return 0;
+            }
+        }
     }
 
-    return 0;
+    cout << "Segmentation fault: Core dumped or whatever its called" << endl;
+    return 1;
 }
