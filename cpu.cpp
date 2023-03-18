@@ -68,6 +68,45 @@ instructionInfo getInfo(string instruction)
     return dIns;
 }
 
+template<typename type>
+string itoh(type num,uint8_t is64)
+{
+    string output = "";
+    vector<uint8_t> stack;
+    type n = num;
+    while(num > 0)
+    {
+        stack.push_back(num%16);
+        num /= 16;
+    }
+
+    while (stack.size() != 0)
+    {
+        uint32_t bit = stack.back();
+        stack.pop_back();
+
+        if (bit >= 0 && bit <= 9)
+        {
+            output += bit + 48;
+        } else if (bit >= 10 && bit <= 15)
+        {
+            output += 'A' + bit - 10;
+        }
+    }
+    
+    if (is64)
+    {
+        string zeros = "";
+        for (int i=0;i<16-output.length();i++)
+        {
+            zeros += "0";
+        }
+        output = zeros + output;
+    }
+
+    return output;
+}
+
 int32_t main(int32_t argc, char** argv)
 {
     if (argc != 2)
@@ -137,17 +176,31 @@ int32_t main(int32_t argc, char** argv)
             {
                 *r2 = htoi<uint64_t>(dInstructions[*r1].instruction);
             }
+            else if (r1p==0    &&     r2p!=0)
+            {
+                string r2h = itoh(*r1,true);
+                instructionInfo r2s = getInfo(r2h);
+                dInstructions[*r2] = r2s;
+            }
         }
 
+        /*
         for (int i=0;i<16;i++)
         {
             cout << registers[i] << ", ";
         }
         cout << endl;
 
+        for (int i=0;i<dInstructions.size();i++)
+        {
+            cout << dInstructions[i].instruction << ",";
+        }
+        cout << endl;
+        */
+
         if (current.opcode=="F") // int
         {
-            if (current.opperand == "FFFFFFFFFFFFFFF")
+            if (current.opperandI == 60)
             {
                 return 0;
             }
