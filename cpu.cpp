@@ -182,6 +182,10 @@ int32_t main(int32_t argc, char** argv)
                 instructionInfo r2s = getInfo(r2h);
                 dInstructions[*r2] = r2s;
             }
+            else if (r1p!=0   &&    r2p!=0)
+            {
+                dInstructions[*r2] = dInstructions[*r1];
+            }
         }
 
         /*
