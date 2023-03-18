@@ -57,6 +57,17 @@ void printInsDat(instructionInfo ins)
     << "Opperand: " << ins.opperand << ", " << ins.opperandI << endl;
 }
 
+instructionInfo getInfo(string instruction)
+{
+    instructionInfo dIns;
+    dIns.instruction = instruction;
+    dIns.opcode = instruction[0];
+    dIns.opperand = instruction.substr(1,15);
+    dIns.opcodeI = htoi<uint8_t>(dIns.opcode);
+    dIns.opperandI = htoi<uint64_t>(dIns.opperand);
+    return dIns;
+}
+
 int32_t main(int32_t argc, char** argv)
 {
     if (argc != 2)
@@ -99,20 +110,42 @@ int32_t main(int32_t argc, char** argv)
     vector<instructionInfo> dInstructions;
     for (uint64_t i=0;i<instructions.size();i++)
     {
-        instructionInfo dIns;
-        dIns.instruction = instructions[i];
-        dIns.opcode = instructions[i][0];
-        dIns.opperand = instructions[i].substr(1,15);
-        dIns.opcodeI = htoi<uint8_t>(dIns.opcode);
-        dIns.opperandI = htoi<uint64_t>(dIns.opperand);
-        dInstructions.push_back(dIns);
+        dInstructions.push_back(getInfo(instructions[i]));
     }
+
+    uint64_t registers[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
     for (uint64_t i=0;i<dInstructions.size();i++)
     {
         instructionInfo current = dInstructions[i];
+        if (current.opcode=="0")
+        {
+            registers[0] = current.opperandI; 
+        }
+        if (current.opcode=="1") // mov
+        {
+            uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+            uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(12,1));
+            uint8_t r1p = htoi<uint8_t>(current.opperand.substr(13,1));
+            uint8_t r2p = htoi<uint8_t>(current.opperand.substr(11,1));
 
-        if (current.opcode=="F")
+            if (r1p==0   &&   r2p==0)
+            {
+                *r2 = *r1;
+            }
+            else if (r1p!=0   &&    r2p==0)
+            {
+                *r2 = htoi<uint64_t>(dInstructions[*r1].instruction);
+            }
+        }
+
+        for (int i=0;i<16;i++)
+        {
+            cout << registers[i] << ", ";
+        }
+        cout << endl;
+
+        if (current.opcode=="F") // int
         {
             if (current.opperand == "FFFFFFFFFFFFFFF")
             {
