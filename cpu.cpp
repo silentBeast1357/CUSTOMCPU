@@ -208,6 +208,14 @@ int32_t main(int32_t argc, char** argv)
             {
                 return 0;
             }
+            else if (current.opperandI = 1)
+            {
+                printf("%c",registers[1]);
+            }
+            else if (current.opperandI = 2)
+            {
+                printf("%ld",registers[1]);
+            }
         }
     }
 
