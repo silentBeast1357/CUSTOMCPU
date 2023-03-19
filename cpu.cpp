@@ -218,11 +218,11 @@ int32_t main(int32_t argc, char** argv)
                 registers[1] /= *r1;
             }
         }
-        if (current.opcode=="3") //push
+        if (current.opcode=="3") // jmp
         {
             if (current.opperandI == 0)
                 line = registers[14];
-            else if (current.opperand[0] == '1')
+            else if (current.opperand[0] == '1') // je
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
@@ -231,7 +231,7 @@ int32_t main(int32_t argc, char** argv)
                     line = registers[14];
                 }
             }
-            else if (current.opperand[0] == '2')
+            else if (current.opperand[0] == '2') // jne
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
