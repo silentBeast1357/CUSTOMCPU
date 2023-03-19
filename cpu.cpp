@@ -122,9 +122,9 @@ int32_t main(int32_t argc, char** argv)
         return 1;
     }
 
-    string fileContents, line;
-    while(getline(File,line))
-        fileContents += line;
+    string fileContents, l;
+    while(getline(File,l))
+        fileContents += l;
     File.close();
 
     uint64_t filelength = fileContents.length();
@@ -154,9 +154,10 @@ int32_t main(int32_t argc, char** argv)
 
     uint64_t registers[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-    for (uint64_t i=0;i<dInstructions.size();i++)
+    uint64_t line=0;
+    while (line<dInstructions.size())
     {
-        instructionInfo current = dInstructions[i];
+        instructionInfo current = dInstructions[line];
         if (current.opcode=="0")
         {
             registers[0] = current.opperandI; 
@@ -216,6 +217,7 @@ int32_t main(int32_t argc, char** argv)
         if (current.opcode=="3")
         {
             line = registers[14];
+            continue;
         }
 
         /*
@@ -247,6 +249,7 @@ int32_t main(int32_t argc, char** argv)
                 printf("%d",registers[1]);
             }
         }
+        line++;
     }
 
     cout << "Segmentation fault: Core dumped or whatever its called" << endl;
