@@ -270,7 +270,7 @@ int32_t main(int32_t argc, char** argv)
             }
             else if (current.opperandI == 2)
             {
-                printf("%ld",registers[1]);
+                printf("%lu",registers[1]);
             }
         }
         line++;
