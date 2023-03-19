@@ -109,6 +109,10 @@ string itoh(type num,uint8_t is64)
 
 int32_t main(int32_t argc, char** argv)
 {
+    uint8_t doDebugMode = 0;
+    cout << "Enable debug mode?" << endl;
+    scanf("%d",&doDebugMode);
+    
     if (argc != 2)
     {
         cout << "Error: No file provided" << endl; 
@@ -193,13 +197,13 @@ int32_t main(int32_t argc, char** argv)
             if (current.opperand[0] == '0') // add
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
-                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(12,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
                 *r2 = *r1 + *r2;
             }
             if (current.opperand[0] == '1') // add
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
-                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(12,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
                 *r2 = *r1 - *r2;
             }
             if (current.opperand[0] == '2') // mul
@@ -214,25 +218,45 @@ int32_t main(int32_t argc, char** argv)
                 registers[1] /= *r1;
             }
         }
-        if (current.opcode=="3")
+        if (current.opcode=="3") //push
         {
-            line = registers[14];
+            if (current.opperandI == 0)
+                line = registers[14];
+            else if (current.opperand[0] == '1')
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
+                if (*r1 == *r2)
+                {
+                    line = registers[14];
+                }
+            }
+            else if (current.opperand[0] == '2')
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
+                if (*r1 != *r2)
+                {
+                    line = registers[14];
+                }
+            }
             continue;
         }
 
-        /*
-        for (int i=0;i<16;i++)
+        if (doDebugMode == 1)
         {
-            cout << registers[i] << ", ";
-        }
-        cout << endl;
+            for (int i=0;i<16;i++)
+            {
+                cout << registers[i] << ", ";
+            }
+            cout << endl;
 
-        for (int i=0;i<dInstructions.size();i++)
-        {
-            cout << dInstructions[i].instruction << ",";
+            for (int i=0;i<dInstructions.size();i++)
+            {
+                cout << dInstructions[i].instruction << ",";
+            }
+            cout << endl;
         }
-        cout << endl;
-        */
 
         if (current.opcode=="F") // int
         {
@@ -246,7 +270,7 @@ int32_t main(int32_t argc, char** argv)
             }
             else if (current.opperandI == 2)
             {
-                printf("%d",registers[1]);
+                printf("%ld",registers[1]);
             }
         }
         line++;
