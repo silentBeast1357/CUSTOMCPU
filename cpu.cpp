@@ -187,6 +187,36 @@ int32_t main(int32_t argc, char** argv)
                 dInstructions[*r2] = dInstructions[*r1];
             }
         }
+        if (current.opcode=="2") // Math instructions
+        {
+            if (current.opperand[0] == '0') // add
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(12,1));
+                *r2 = *r1 + *r2;
+            }
+            if (current.opperand[0] == '1') // add
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(12,1));
+                *r2 = *r1 - *r2;
+            }
+            if (current.opperand[0] == '2') // mul
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                registers[1] *= *r1;
+            }
+            if (current.opperand[0] == '3') // div
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                registers[2] = registers[1] % *r1;
+                registers[1] /= *r1;
+            }
+        }
+        if (current.opcode=="3")
+        {
+            line = registers[14];
+        }
 
         /*
         for (int i=0;i<16;i++)
