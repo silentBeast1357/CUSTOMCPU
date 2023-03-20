@@ -242,6 +242,20 @@ int32_t main(int32_t argc, char** argv)
             }
             continue;
         }
+        if (current.opcode=="4")//push
+        {
+            uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+            string r2h = itoh(*r1,true);
+            instructionInfo r2s = getInfo(r2h);
+            dInstructions[registers[15]] = r2s;
+            registers[15]--;
+        }
+        if (current.opcode=="5")//pop
+        {
+            uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+            *r1 = htoi<uint64_t>(dInstructions[registers[15]].instruction);
+            registers[15]++;
+        }
 
         if (doDebugMode == 1)
         {
