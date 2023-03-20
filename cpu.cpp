@@ -252,9 +252,31 @@ int32_t main(int32_t argc, char** argv)
         }
         if (current.opcode=="5")//pop
         {
+            registers[15]++;
             uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
             *r1 = htoi<uint64_t>(dInstructions[registers[15]].instruction);
-            registers[15]++;
+            instructionInfo zero = getInfo(itoh<uint64_t>(0,true));
+            dInstructions[registers[15]] = zero;
+        }
+        if (current.opcode=="6")
+        {
+            if (current.opperandI == 1) // call
+            {
+                string currentLoc = itoh(line,true);
+                instructionInfo cli = getInfo(currentLoc);
+                dInstructions[registers[15]] = cli;
+                registers[15]--;
+
+                line = registers[14];
+                continue;
+            }
+            if (current.opperandI == 2) //ret
+            {
+                registers[15]++;
+                line = htoi<uint64_t>(dInstructions[registers[15]].instruction);
+                instructionInfo zero = getInfo(itoh<uint64_t>(0,true));
+                dInstructions[registers[15]] = zero;
+            }
         }
 
         if (doDebugMode == 1)
