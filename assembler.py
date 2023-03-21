@@ -82,7 +82,9 @@ def main():
     for i, instruction in enumerate(instructions):
         if len(instruction) == 2 and instruction[1] == ":":
             labels[instruction[0]] = i
-    
+        elif len(instruction) == 1 and instruction[0] in labels:
+            instruction[0] = str(labels[instruction[0]])
+
     registers = {
         "a0":0,
         "ax":1,
@@ -102,7 +104,37 @@ def main():
         "sp":15
     }
 
+    output = ""
+
+    for instruction in instructions:
+        if len(instruction) == 1:
+            output += itoh(int(instruction[0]),True) + "\n"
+        if instruction[0] == "mov":
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            r1p = False
+            r2p = False
+            r1 = 0 
+            r2 = 0
+
+            if instruction[1][0] == '*':
+                r1p = True
+                r1 = registers[instruction[1][1:]]
+            else:
+                r1 = registers[instruction[1]]
+            if instruction[3][0] == '*':
+                r2p = True
+                r2 = registers[instruction[3][1:]]
+            else:
+                r2 = registers[instruction[3]]
+
+            cins = htoi("1000000000000000")
+            cins += htoi(str(int(r1p))+ itoh(r1)+"00") + htoi(str(int(r2p))+ itoh(r2))
+            output += itoh(cins,True) + "\n"
     
+    with open("bin","w") as file:
+        file.write(output)
 
 if __name__ == "__main__":
     main()
