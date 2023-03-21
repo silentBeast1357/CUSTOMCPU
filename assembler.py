@@ -32,11 +32,16 @@ def main():
         
         if lastInstruction:
             instruction.append(lastInstruction)
-        instructions.append(instruction)
+        if instruction:
+            instructions.append(instruction)
 
-    print(instructions)
+    labels = {}
 
+    for i, instruction in enumerate(instructions):
+        if len(instruction) == 2 and instruction[1] == ":":
+            labels[instruction[0]] = i
 
+    print(labels)
 
 if __name__ == "__main__":
     main()
