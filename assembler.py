@@ -1,5 +1,35 @@
 import sys
 
+def itoh(num,is64=False):
+    n = num
+    stack = [] 
+    
+    while n > 0:
+        stack.append(n % 16)
+        n /= 16
+        n = int(n)
+    
+    output = ""
+    while stack:
+        n = stack.pop()
+
+        if n >= 10 and n <= 16:
+            n = chr(ord("A")+(n-10))
+        else:
+            n = str(n)
+        
+        output += n
+    
+    if is64:
+        tmp = output
+        output = ""
+
+        for i in range(16-len(tmp)):
+            output += "0"
+        output += tmp
+    
+    return output
+
 def main():
     if len(sys.argv) != 2:
         print("Error: no file provided")
@@ -40,8 +70,6 @@ def main():
     for i, instruction in enumerate(instructions):
         if len(instruction) == 2 and instruction[1] == ":":
             labels[instruction[0]] = i
-
-    print(labels)
 
 if __name__ == "__main__":
     main()
