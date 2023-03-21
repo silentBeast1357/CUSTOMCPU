@@ -30,6 +30,18 @@ def itoh(num,is64=False):
     
     return output
 
+def htoi(hex):
+    output = 0
+    multiplier = 1
+    for char in hex[::-1]:
+        if ord(char) >= ord("A") and ord(char) <= ord("F"):
+            output += (ord(char)-ord("A")+10)*multiplier
+        else:
+            output += int(char) * multiplier
+        multiplier *= 16
+    return output
+
+
 def main():
     if len(sys.argv) != 2:
         print("Error: no file provided")
@@ -70,6 +82,8 @@ def main():
     for i, instruction in enumerate(instructions):
         if len(instruction) == 2 and instruction[1] == ":":
             labels[instruction[0]] = i
+    
+    print(htoi("3C"))
 
 if __name__ == "__main__":
     main()
