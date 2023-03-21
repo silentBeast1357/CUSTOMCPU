@@ -83,7 +83,26 @@ def main():
         if len(instruction) == 2 and instruction[1] == ":":
             labels[instruction[0]] = i
     
-    print(htoi("3C"))
+    registers = {
+        "a0":0,
+        "ax":1,
+        "bx":2,
+        "cx":3,
+        "dx":4,
+        "ex":5,
+        "fx":6,
+        "gx":7,
+        "hx":8,
+        "ix":9,
+        "jx":10,
+        "kx":11,
+        "lx":12,
+        "mx":13,
+        "ds":14,
+        "sp":15
+    }
+
+    
 
 if __name__ == "__main__":
     main()
