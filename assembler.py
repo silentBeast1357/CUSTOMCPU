@@ -6,8 +6,7 @@ def itoh(num,is64=False):
     
     while n > 0:
         stack.append(n % 16)
-        n /= 16
-        n = int(n)
+        n = int(n/16)
     
     output = ""
     while stack:
@@ -132,7 +131,9 @@ def main():
             cins = htoi("1000000000000000")
             cins += htoi(str(int(r1p))+ itoh(r1)+"00") + htoi(str(int(r2p))+ itoh(r2))
             output += itoh(cins,True) + "\n"
-    
+        if instruction[0] == "int":
+            output += "F"+itoh(int(instruction[1]),True)[1:]
+
     with open("bin","w") as file:
         file.write(output)
 
