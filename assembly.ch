@@ -1,7 +1,8 @@
+loop
+mov ds,a0
 69
 mov ax,a0
-int 1
-10
-mov ax,a0
-int 1
-int 60
+
+loop:
+    int 1
+    jmp

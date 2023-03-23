@@ -81,7 +81,8 @@ def main():
     for i, instruction in enumerate(instructions):
         if len(instruction) == 2 and instruction[1] == ":":
             labels[instruction[0]] = i
-        elif len(instruction) == 1 and instruction[0] in labels:
+    for instruction in instructions:
+        if len(instruction) == 1 and instruction[0] in labels:
             instruction[0] = str(labels[instruction[0]])
 
     registers = {
@@ -106,8 +107,6 @@ def main():
     output = ""
 
     for instruction in instructions:
-        if len(instruction) == 1:
-            output += itoh(int(instruction[0]),True) + "\n"
         if instruction[0] == "mov":
             if instruction[2] != ",":
                 print("invalid command. \',\' not present")
@@ -131,8 +130,12 @@ def main():
             cins = htoi("1000000000000000")
             cins += htoi(str(int(r1p))+ itoh(r1)+"00") + htoi(str(int(r2p))+ itoh(r2))
             output += itoh(cins,True) + "\n"
-        if instruction[0] == "int":
-            output += "F"+itoh(int(instruction[1]),True)[1:]
+        elif instruction[0] == "int":
+            output += "F"+itoh(int(instruction[1]),True)[1:] + "\n"
+        elif instruction[0] == "jmp":
+            output += "3000000000000000\n"
+        elif len(instruction) == 1:
+            output += itoh(int(instruction[0]),True) + "\n"
 
     with open("bin","w") as file:
         file.write(output)
