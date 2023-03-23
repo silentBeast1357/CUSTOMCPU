@@ -136,6 +136,10 @@ def main():
             output += "F"+itoh(int(instruction[1]),True)[1:] + "\n"
         elif instruction[0] == "jmp":
             output += "3000000000000000\n"
+        elif instruction[0] == "call":
+            output += "6000000000000001\n"
+        elif instruction[0] == "ret":
+            output += "6000000000000002\n"
         elif len(instruction) == 1:
             output += itoh(int(instruction[0]),True) + "\n"
 

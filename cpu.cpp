@@ -324,6 +324,7 @@ int32_t main(int32_t argc, char** argv)
                 line = htoi<uint64_t>(dInstructions[registers[15]].instruction);
                 instructionInfo zero = getInfo(itoh<uint64_t>(0,true));
                 dInstructions[registers[15]] = zero;
+                continue;
             }
         }
 
