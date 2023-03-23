@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import sys
 
 def itoh(num,is64=False):
