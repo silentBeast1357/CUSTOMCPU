@@ -162,6 +162,7 @@ int32_t main(int32_t argc, char** argv)
     while (line<dInstructions.size())
     {
         instructionInfo current = dInstructions[line];
+
         if (current.opcode=="0")
         {
             registers[0] = current.opperandI; 
@@ -322,6 +323,7 @@ int32_t main(int32_t argc, char** argv)
             {
                 registers[15]++;
                 line = htoi<uint64_t>(dInstructions[registers[15]].instruction);
+                line++;
                 instructionInfo zero = getInfo(itoh<uint64_t>(0,true));
                 dInstructions[registers[15]] = zero;
                 continue;

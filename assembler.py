@@ -1,5 +1,3 @@
-#!/bin/python3
-
 import sys
 
 def itoh(num,is64=False):
@@ -80,9 +78,12 @@ def main():
 
     labels = {}
 
+    cl = 0
     for i, instruction in enumerate(instructions):
         if len(instruction) == 2 and instruction[1] == ":":
-            labels[instruction[0]] = i
+            labels[instruction[0]] = cl 
+        else:
+            cl += 1
     for instruction in instructions:
         if len(instruction) == 1 and instruction[0] in labels:
             instruction[0] = str(labels[instruction[0]])
