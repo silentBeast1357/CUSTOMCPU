@@ -1,24 +1,7 @@
 import sys
 
 def itoh(num,is64=False):
-    n = num
-    stack = [] 
-    
-    while n > 0:
-        stack.append(n % 16)
-        n = int(n/16)
-    
-    output = ""
-    while stack:
-        n = stack.pop()
-
-        if n >= 10 and n <= 16:
-            n = chr(ord("A")+(n-10))
-        else:
-            n = str(n)
-        
-        output += n
-    
+    output = hex(num)[2:].upper()
     if is64:
         tmp = output
         output = ""
@@ -135,12 +118,30 @@ def main():
             output += itoh(cins,True) + "\n"
         elif instruction[0] == "int":
             output += "F"+itoh(int(instruction[1]),True)[1:] + "\n"
+        elif instruction[0] == "add":
+            cins = htoi("2000000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
         elif instruction[0] == "jmp":
             output += "3000000000000000\n"
+        elif instruction[0] == "je":
+            cins = htoi("3000000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
         elif instruction[0] == "call":
             output += "6000000000000001\n"
         elif instruction[0] == "ret":
             output += "6000000000000002\n"
+        elif instruction[0] == "push":
+            output += "400000000000000" + itoh(registers[instruction[1]]) + "\n"
+        elif instruction[0] == "pop":
+            output += "500000000000000" + itoh(registers[instruction[1]]) + "\n"
         elif len(instruction) == 1:
             output += itoh(int(instruction[0]),True) + "\n"
 

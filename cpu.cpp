@@ -163,6 +163,8 @@ int32_t main(int32_t argc, char** argv)
     {
         instructionInfo current = dInstructions[line];
 
+        //cout << current.instruction << endl;
+
         if (current.opcode=="0")
         {
             registers[0] = current.opperandI; 
@@ -289,7 +291,6 @@ int32_t main(int32_t argc, char** argv)
                     line = registers[14];
                 }
             }
-            continue;
         }
         if (current.opcode=="4")//push
         {
