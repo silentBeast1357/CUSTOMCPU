@@ -209,7 +209,7 @@ int32_t main(int32_t argc, char** argv)
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
-                *r2 = *r1 - *r2;
+                *r2 = *r2 - *r1;
             }
             if (current.opperand[0] == '2') // mul
             {
@@ -359,7 +359,7 @@ int32_t main(int32_t argc, char** argv)
             }
         }
 
-        /*if (doDebugMode == 1)
+        if (doDebugMode == 1)
         {
             for (int i=0;i<16;i++)
             {
@@ -372,7 +372,7 @@ int32_t main(int32_t argc, char** argv)
                 cout << dInstructions[i].instruction << ",";
             }
             cout << endl;
-        }*/
+        }
 
         if (current.opcode=="F") // int
         {
