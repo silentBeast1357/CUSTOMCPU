@@ -25,6 +25,7 @@ data:
         'l'
         'l'
         'o'
+        10
         0
 
 print:
