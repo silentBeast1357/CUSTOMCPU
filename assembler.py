@@ -92,6 +92,12 @@ def main():
 
     output = ""
 
+    for i, instruction in enumerate(instructions):
+        first = str(instruction[0])
+        if len(first) == 3:
+            if first[0] in "\'\"" and first[2] in "\'\"":
+                instructions[i] = [str(ord(first[1]))]
+
     for instruction in instructions:
         if instruction[0] == "mov":
             if instruction[2] != ",":
