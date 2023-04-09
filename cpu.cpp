@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 
+#include <windows.h>
+
 using namespace std;
 
 template<typename t>
@@ -203,7 +205,7 @@ int32_t main(int32_t argc, char** argv)
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
                 *r2 = *r1 + *r2;
             }
-            if (current.opperand[0] == '1') // add
+            if (current.opperand[0] == '1') // sub 
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
@@ -241,9 +243,14 @@ int32_t main(int32_t argc, char** argv)
             {
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
+
                 if (*r1 == *r2)
                 {
                     line = registers[14];
+                }
+                else
+                {
+                    line++;
                 }
             }
             else if (current.opperand[0] == '2') // jne
@@ -254,6 +261,10 @@ int32_t main(int32_t argc, char** argv)
                 {
                     line = registers[14];
                 }
+                else
+                {
+                    line++;
+                }
             }
             else if (current.opperand[0] == '3') // jl
             {
@@ -262,6 +273,10 @@ int32_t main(int32_t argc, char** argv)
                 if (*r2 < *r1)
                 {
                     line = registers[14];
+                }
+                else
+                {
+                    line++;
                 }
             }
             else if (current.opperand[0] == '4') // jle
@@ -272,6 +287,10 @@ int32_t main(int32_t argc, char** argv)
                 {
                     line = registers[14];
                 }
+                else
+                {
+                    line++;
+                }
             }
             else if (current.opperand[0] == '5') // jg
             {
@@ -280,6 +299,10 @@ int32_t main(int32_t argc, char** argv)
                 if (*r2 > *r1)
                 {
                     line = registers[14];
+                }
+                else
+                {
+                    line++;
                 }
             }
             else if (current.opperand[0] == '6') // jge
@@ -290,7 +313,12 @@ int32_t main(int32_t argc, char** argv)
                 {
                     line = registers[14];
                 }
+                else
+                {
+                    line++;
+                }
             }
+            continue;
         }
         if (current.opcode=="4")//push
         {
@@ -331,7 +359,7 @@ int32_t main(int32_t argc, char** argv)
             }
         }
 
-        if (doDebugMode == 1)
+        /*if (doDebugMode == 1)
         {
             for (int i=0;i<16;i++)
             {
@@ -344,7 +372,7 @@ int32_t main(int32_t argc, char** argv)
                 cout << dInstructions[i].instruction << ",";
             }
             cout << endl;
-        }
+        }*/
 
         if (current.opcode=="F") // int
         {
@@ -362,6 +390,14 @@ int32_t main(int32_t argc, char** argv)
             }
         }
         line++;
+
+        if (doDebugMode)
+        {
+            while (!(GetKeyState('K') & 0x8000))
+                continue;
+            while (GetKeyState('K') & 0x8000)
+                continue;
+        }
     }
 
     cout << "Segmentation fault: Core dumped or whatever its called" << endl;

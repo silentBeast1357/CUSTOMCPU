@@ -67,9 +67,9 @@ def main():
             labels[instruction[0]] = cl 
         else:
             cl += 1
-    for instruction in instructions:
+    for i,instruction in enumerate(instructions):
         if len(instruction) == 1 and instruction[0] in labels:
-            instruction[0] = str(labels[instruction[0]])
+            instructions[i][0] = str(labels[instruction[0]])
 
     registers = {
         "a0":0,
@@ -128,7 +128,7 @@ def main():
         elif instruction[0] == "jmp":
             output += "3000000000000000\n"
         elif instruction[0] == "je":
-            cins = htoi("3000000000000000")
+            cins = htoi("3100000000000000")
             cins += registers[instruction[1]]*16 + registers[instruction[3]]
             if instruction[2] != ",":
                 print("invalid command. \',\' not present")
