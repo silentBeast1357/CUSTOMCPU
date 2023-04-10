@@ -138,6 +138,14 @@ def main():
                 print("invalid command. \',\' not present")
                 return 1
             output += itoh(cins,True) + "\n"
+        elif instruction[0] == "mul":
+            cins = htoi("2200000000000000")
+            cins += registers[instruction[1]]
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "div":
+            cins = htoi("2300000000000000")
+            cins += registers[instruction[1]]
+            output += itoh(cins,True) + "\n"
         elif instruction[0] == "jmp":
             output += "3000000000000000\n"
         elif instruction[0] == "je":
