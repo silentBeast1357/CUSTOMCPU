@@ -4,7 +4,7 @@ mov ax,a0
 mov bx,a0
 end
 mov ds,a0
-jne ax,bx
+jle ax,bx
 
 int 60
 
