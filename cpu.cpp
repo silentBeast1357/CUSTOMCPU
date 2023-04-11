@@ -239,6 +239,12 @@ int32_t main(int32_t argc, char** argv)
                 uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
                 *r1 = ~*r1;
             }
+            if (current.opperand[0] == '7') // and
+            {
+                uint64_t* r1 = registers + htoi<uint8_t>(current.opperand.substr(14,1));
+                uint64_t* r2 = registers + htoi<uint8_t>(current.opperand.substr(13,1));
+                *r2 = *r1 & *r2;
+            }
         }
         if (current.opcode=="3") // jmp
         {
