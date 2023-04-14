@@ -359,6 +359,28 @@ int32_t main(int32_t argc, char** argv)
                     line++;
                 }
             }
+            else if (current.opperand[0] == '7') // jz
+            {
+                if (registers[13] == 0)
+                {
+                    line = registers[14];
+                }
+                else
+                {
+                    line++;
+                }
+            }
+            else if (current.opperand[0] == '8') // jnz
+            {
+                if (registers[13] != 0)
+                {
+                    line = registers[14];
+                }
+                else
+                {
+                    line++;
+                }
+            }
             continue;
         }
         if (current.opcode=="4")//push
