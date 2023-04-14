@@ -190,6 +190,10 @@ def main():
                 print("invalid command. \',\' not present")
                 return 1
             output += itoh(cins,True) + "\n"
+        elif instruction[0] == "jz":
+            output += "3700000000000000"
+        elif instruction[0] == "jnz":
+            output += "3800000000000000"
         elif instruction[0] == "call":
             output += "6000000000000001\n"
         elif instruction[0] == "ret":
