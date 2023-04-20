@@ -146,6 +146,60 @@ def main():
             cins = htoi("2300000000000000")
             cins += registers[instruction[1]]
             output += itoh(cins,True) + "\n"
+        elif instruction[0] == "<<":
+            cins = htoi("2400000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == ">>":
+            cins = htoi("2500000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "not":
+            cins = htoi("2600000000000000")
+            cins += registers[instruction[1]]
+            output += itoh(cins,True)
+        elif instruction[0] == "and":
+            cins = htoi("2700000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "nand":
+            cins = htoi("2800000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "or":
+            cins = htoi("2900000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "nor":
+            cins = htoi("2A00000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+        elif instruction[0] == "xor":
+            cins = htoi("2B00000000000000")
+            cins += registers[instruction[1]]*16 + registers[instruction[3]]
+            if instruction[2] != ",":
+                print("invalid command. \',\' not present")
+                return 1
+            output += itoh(cins,True) + "\n"
+
         elif instruction[0] == "jmp":
             output += "3000000000000000\n"
         elif instruction[0] == "je":
@@ -190,6 +244,10 @@ def main():
                 print("invalid command. \',\' not present")
                 return 1
             output += itoh(cins,True) + "\n"
+        elif instruction[0] == "jz":
+            output += "3700000000000000"
+        elif instruction[0] == "jnz":
+            output += "3800000000000000"
         elif instruction[0] == "call":
             output += "6000000000000001\n"
         elif instruction[0] == "ret":
