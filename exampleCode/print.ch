@@ -4,67 +4,52 @@ stack:
     0
     0
     0
-    0
-    0
-    0
-    0
-    0
 stackEnd:
-    0
 
 stackEnd
 mov sp,a0
+1
+sub sp,a0
 main
 mov ds,a0
 jmp
 
-data:
-    string:
-        'H'
-        'e'
-        'l'
-        'l'
-        'o'
-        10
-        0
+text:
+    "H"
+    "e"
+    "l"
+    "l"
+    "o"
+    10
+    0
 
-print:
+printStr:
     push ax
     push bx
     push cx
-    push dx
-    push ds
 
-    mov cx,ax
-    0
-    mov bx,a0
+    mov bx,ax
     1
-    mov dx,a0
-print_loop:
-    mov ax,*cx
+    mov cx,a0
 
-    print_end
+    printStr_loop
     mov ds,a0
-    je ax,bx
-
+printStr_loop:
+    mov ax,*bx
     int 1
-    add cx,dx
-    print_loop
-    mov ds,a0
-    jmp
-print_end:
-    pop ds
-    pop dx
+    or ax,ax
+    add bx,cx
+    jnz
+printStr_end:
     pop cx
     pop bx
     pop ax
     ret
-    
 
 main:
-    string
+    text
     mov ax,a0
-    print
+    printStr
     mov ds,a0
     call
 
