@@ -1,13 +1,22 @@
 import sys
 
-class Lexer:
+class Instruction:
+    def __init__(self, type) -> None:
+        self.type = type
 
+class VariableIns(Instruction):
+    def __init__(self, type, varType, varName, varValue) -> None:
+        super().__init__(type)
+        self.varType,self.varName,self.varValue = varType, varName, varValue
+
+class Lexer:
     # Variables
     rawCode = None
     index = 0
     codeParts = []
     part = ""
-    symbols = "+-*/=,:;\{\}()[]"
+    symbols = "+-*/=,:;{}()[]"
+    inStr = False
     
     # Init function
     def __init__(self,rawCode) -> None:
@@ -15,10 +24,42 @@ class Lexer:
 
     # loop to get code parts
     def getPart(self) -> None:
-        # creates a currentChar variable for less typing
+        # Creates a currentChar variable for less typing
         currentChar = self.rawCode[self.index]
+        
+        # Checks if the currentChar is in a string 
+        if self.inStr:
+            # checks if the char is a \
+            if currentChar == "\\":
+                # gets the next char
+                nextChar = self.rawCode[self.index+1]
+
+                # gets special characters
+                if nextChar in "\"\'":
+                    self.part += nextChar
+                elif nextChar == "\\":
+                    self.part += nextChar
+                else:
+                    self.proceed()
+                    return
+                self.proceed()
+            # if current character is a "
+            elif currentChar in "\'\"":
+                # exits string
+                self.part += currentChar
+                self.appendPart()
+                self.inStr = False
+            # adds the current char if the char is not a "
+            else : self.part += currentChar
+        # checks if char is a "
+        elif currentChar in "\"\'":
+            # Enters string
+            if self.part:
+                self.appendPart()
+            self.inStr = True
+            self.part += currentChar
         # checks if char is a rigged char
-        if currentChar in " \t\n":
+        elif currentChar in " \t\n":
             if self.part:
                 self.appendPart()
         # checks if char is a symbol
@@ -45,6 +86,12 @@ class Lexer:
         # Loop for getting parts
         while self.index < len(self.rawCode):
             self.getPart()
+        
+        if self.inStr:
+            print("Never exited out of string. Failed to compile.")
+            exit()
+        if self.part:
+            self.appendPart()
         
         print(self.codeParts)
 

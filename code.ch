@@ -4,6 +4,6 @@ E_SETTINGS
 
 int main()
 {
-    text = dstr("Hello World!");
+    text = dstr("Hello World!\\ \"");
     printStr(text);
 }
