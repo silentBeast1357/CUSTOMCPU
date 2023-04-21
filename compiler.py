@@ -87,13 +87,13 @@ class Lexer:
         while self.index < len(self.rawCode):
             self.getPart()
         
+        # Checks if user exited out of string, throws an error if the user didn't
         if self.inStr:
             print("Never exited out of string. Failed to compile.")
             exit()
+        # if part is not empty it appends it to codeParts
         if self.part:
             self.appendPart()
-        
-        print(self.codeParts)
 
 
 
@@ -114,6 +114,8 @@ def main() -> int:
     # Creats a lexer object and starts it
     lexer = Lexer(codeRaw)
     lexer.start()
+
+    return 0
 
 if __name__ == "__main__":
     main()
