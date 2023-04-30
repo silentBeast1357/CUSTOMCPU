@@ -21,10 +21,42 @@ class Lexer:
     part = ""
     # index of text
     index = 0
+    # symbols
+    symbols = ":,"
+    
+    # special modifiers
+    inCmt = False
 
     # constructor. Takes code as argument 
     def __init__(self, text):
         self.text = text
+    
+    # Function to start lexer
+    def start(self):
+        while self.index < len(self.text):
+            self.process()
+        
+        self.appPart()
+        print(self.parts)
+        return self.parts
+    
+    def process(self):
+        char = self.text[self.index]
+
+        if self.inCmt:
+            if char == "\n":
+                self.inCmt = False
+        elif char == ";":
+            self.inCmt = True
+        elif char in " \t\n":
+            self.appPart()
+        elif char in self.symbols:
+            self.appPart()
+            self.parts.append(char)
+        else:
+            self.part += char
+        
+        self.proceed()
     
     # increments index by 1
     def proceed(self):
@@ -52,6 +84,7 @@ def main(argc, argv):
     
     # created lexer object
     lexer = Lexer(code)
+    lexer.start()
 
 # runs main function
 if __name__ == "__main__":
