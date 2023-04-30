@@ -126,9 +126,45 @@ class Instruction2v(Instruction):
             print(f"{r2} is not a valid register")
             exit()
 
+class db:
+    output = ""
+    instruction = []
+    def __init__(self, instruction):
+        self.instruction = instruction
+    
+    values = []
+
+    def validate(self):
+        values = self.instruction[1:]
+
+        index = 1
+        while index < len(values):
+            if values[index] != ",":
+                print("Missing ,")
+                exit()
+            index += 2
+        
+        index = 0
+        while index < len(values):
+            value = values[index]
+            if value.isdigit():
+                self.values.append(value)
+            elif value[0] == '\'' and value[-1] == '\'':
+                self.values.append(str(ord(value[1])))
+            else:
+                print("Unknown part found")
+                exit()
+            index += 2
+    def getOutput(self):
+        self.validate()
+        for num in self.values:
+            self.output += num + "\n"
+        return self.output
+
+
 class INT:
     instruction = []
-    def __init__(self, instruction) -> None:
+    def __init__(self, instruction):
         self.instruction = instruction
     
     def validate(self):
