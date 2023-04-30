@@ -40,22 +40,31 @@ class Lexer:
         print(self.parts)
         return self.parts
     
+    # processes individual characters
     def process(self):
+        # grabs the char
         char = self.text[self.index]
 
+        # checks if char is in a comment
         if self.inCmt:
+            # checks if the char is a \n. Exits out of the comment if so.
             if char == "\n":
                 self.inCmt = False
+        # Checks if the character is a ;. Enters into comment if so.
         elif char == ";":
             self.inCmt = True
+        # checks if the character is a common seperator. appends part if so.
         elif char in " \t\n":
             self.appPart()
+        # checks if the character is a symbol. Appends part and then appends the symbol if so
         elif char in self.symbols:
             self.appPart()
             self.parts.append(char)
+        # if all the questions above were false the char is added to part
         else:
             self.part += char
         
+        # increments index by 1
         self.proceed()
     
     # increments index by 1
@@ -84,7 +93,9 @@ def main(argc, argv):
     
     # created lexer object
     lexer = Lexer(code)
-    lexer.start()
+
+    # gets parts
+    parts = lexer.start()
 
 # runs main function
 if __name__ == "__main__":
