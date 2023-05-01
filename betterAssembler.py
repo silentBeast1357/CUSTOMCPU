@@ -103,9 +103,21 @@ class Lexer:
 
 registerList = ["ax","bx","cx","dx","ex","fx","gx","hx","ix","jx","lx","lo","ds","sp"]
 
+labels = []
+
 class Label:
     def __init__(self,name) -> None:
-        pass
+        self.name = name
+        self.validate()
+    def validate(self):
+        if len(self.name) != 2:
+            print("label cant be broken")
+            exit()
+        if self.name[0] in registerList:
+            print("name cant be a register")
+    def getOutput(self):
+        return f"{self.name[0]}:\n"
+
 
 class Instruction:
     output = ""
@@ -117,7 +129,7 @@ class Instruction:
         self.output += str(value) + "\n"
     
     def isa0(self,value):
-        return value.isdigit() or (value[0] == "\'" and value[2] == "\'")
+        return value.isdigit() or (value[0] == "\'" and value[2] == "\'") or value in labels
 
 class Instruction2v(Instruction):
     def validate(self):
@@ -215,7 +227,7 @@ class mov(Instruction):
         if r1 not in registerList:
             print(f"{r1} is not a valid register")
             exit()
-        if r2 not in registerList and not r2.isdigit():
+        if r2 not in registerList and not r2.isdigit() and r2 not in labels:
             print(f"{r2} is not a valid register or number")
             exit()
     def getOutput(self):
@@ -226,6 +238,9 @@ class mov(Instruction):
         if self.isa0(r2):
             self.seta0(r2) 
             r2 = "a0"
+        elif r2[0] == "*" and self.isa0(r2[1:]):
+            self.seta0(r2[1:])
+            r2 = "*a0"
         
         self.output += f"mov {r1}, {r2}\n"
         return self.output
@@ -265,12 +280,18 @@ class TokenSeperator:
             self.tokenList.append(db(parts))
         elif parts[0] == "int":
             self.tokenList.append(INT(parts))
+        elif parts[1] == ":":
+            self.tokenList.append(Label(parts))
 
         self.proceed()
 
     
     # the function the start the seperator
     def start(self):
+        for line in self.lines:
+            if line[1] == ":":
+                label = Label(line)
+                labels.append(label.name[0])
         while self.index < len(self.lines):
             self.process()
         return self.tokenList
