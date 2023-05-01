@@ -25,7 +25,7 @@ class Lexer:
     # index of text
     index = 0
     # symbols
-    symbols = ":,"
+    symbols = ","
     
     # special modifiers
     inCmt = False
@@ -35,6 +35,11 @@ class Lexer:
         self.text = text
     
     def appLine(self):
+        for part in self.parts:
+            if part[0] == "'" and part[-1] == "'" and len(part) != 3:
+                print("Char cannot have more than one letter")
+                exit()
+
         if self.parts:
             self.lines.append(self.parts) 
             self.parts = []
@@ -46,7 +51,6 @@ class Lexer:
         
         self.appPart()
         self.appLine()
-        print(self.lines)
         return self.lines
     
     # processes individual characters
@@ -67,6 +71,11 @@ class Lexer:
         # Checks if the character is a ;. Enters into comment if so.
         elif char == ";":
             self.inCmt = True
+        elif char == ":":
+            self.appPart()
+            self.part = ":"
+            self.appPart()
+            self.appLine()
         # checks if the character is a common seperator. appends part if so.
         elif char in " \t\n":
             self.appPart()
@@ -94,6 +103,10 @@ class Lexer:
 
 registerList = ["ax","bx","cx","dx","ex","fx","gx","hx","ix","jx","lx","lo","ds","sp"]
 
+class Label:
+    def __init__(self,name) -> None:
+        pass
+
 class Instruction:
     output = ""
     instruction = []
@@ -101,7 +114,7 @@ class Instruction:
         self.instruction = instruction
 
     def seta0(self,value):
-        output += str(value) + "\n"
+        self.output += str(value) + "\n"
     
     def isa0(self,value):
         return value.isdigit() or (value[0] == "\'" and value[2] == "\'")
@@ -202,8 +215,8 @@ class mov(Instruction):
         if r1 not in registerList:
             print(f"{r1} is not a valid register")
             exit()
-        if r2 not in registerList:
-            print(f"{r2} is not a valid register")
+        if r2 not in registerList and not r2.isdigit():
+            print(f"{r2} is not a valid register or number")
             exit()
     def getOutput(self):
         self.validate()
@@ -236,15 +249,22 @@ class TokenSeperator:
     
     # gets part by index or given number
     def getPart(self):
-        return self.parts[self.index]
+        return self.lines[self.index]
 
     # constructor
     def __init__(self, parts):
-        self.parts = parts
+        self.lines = parts
     
     # Processes the line
     def process(self):
         parts = self.getPart()
+
+        if parts[0] == "mov":
+            self.tokenList.append(mov(parts))
+        elif parts[0] == "db":
+            self.tokenList.append(db(parts))
+        elif parts[0] == "int":
+            self.tokenList.append(INT(parts))
 
         self.proceed()
 
@@ -253,6 +273,7 @@ class TokenSeperator:
     def start(self):
         while self.index < len(self.lines):
             self.process()
+        return self.tokenList
 def main(argc, argv):
     # checks if argc is 2. Returns 1 if not
     if argc != 2:
@@ -271,12 +292,20 @@ def main(argc, argv):
 
     # runs lexer and stores output
     parts = lexer.start()
+    print(parts)
 
     # creates tokenSeperator object 
     tokenSeperator = TokenSeperator(parts);
 
     # starts seperator and stores the output
     tokens = tokenSeperator.start()
+    output = ""
+
+    for token in tokens:
+        output += token.getOutput()
+    
+    with open("assembly.ch","w") as file:
+        file.write(output)
 
     return 0;
 
