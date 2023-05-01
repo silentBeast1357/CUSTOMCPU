@@ -111,10 +111,6 @@ string itoh(type num,uint8_t is64)
 
 int32_t main(int32_t argc, char** argv)
 {
-    uint8_t doDebugMode = 0;
-    cout << "Enable debug mode?" << endl;
-    scanf("%d",&doDebugMode);
-    
     if (argc != 2)
     {
         cout << "Error: No file provided" << endl; 
@@ -164,8 +160,6 @@ int32_t main(int32_t argc, char** argv)
     while (line<dInstructions.size())
     {
         instructionInfo current = dInstructions[line];
-
-        //cout << current.instruction << endl;
 
         if (current.opcode=="0")
         {
@@ -453,14 +447,6 @@ int32_t main(int32_t argc, char** argv)
             }
         }
         line++;
-
-        if (doDebugMode)
-        {
-            while (!(GetKeyState('K') & 0x8000))
-                continue;
-            while (GetKeyState('K') & 0x8000)
-                continue;
-        }
     }
 
     cout << "Segmentation fault: Core dumped or whatever its called" << endl;
