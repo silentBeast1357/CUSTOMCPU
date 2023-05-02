@@ -144,11 +144,31 @@ class Instruction2v(Instruction):
         r1 = self.instruction[1]
         r2 = self.instruction[3]
 
-        if r1 not in registerList:
-            print(f"{r1} is not a valid register")
+        r1p = self.instruction[1][0] == "*"
+        r2p = self.instruction[3][0] == "*"
+        if r1p : r1 = r1[1:]
+        if r2p : r2 = r2[1:]
+
+        if not (r1 in registerList or r1 in labels or (r1.isdigit() and r1p)):
+            print("Value is not a register or label")
+            exit() 
+        if not (r1 in registerList or r1 in labels or r1.isdigit()):
+            print("Value is not a register, label or a number")
             exit()
-        if r2 not in registerList:
-            print(f"{r2} is not a valid register")
+
+class Instruction1v(Instruction):
+    def validate(self):
+        if len(self.instruction) != 2:
+            print("Error: wrong instruction format")
+            exit()
+        
+        v = self.instruction[1]
+
+        if v[0] == "*":
+            v = v[1:]
+        
+        if v not in registerList and v not in labels and not v.isdigit:
+            print("Value is not a register, label or a number")
             exit()
 
 class db:
@@ -186,6 +206,23 @@ class db:
             self.output += num + "\n"
         return self.output
 
+class jmp(Instruction1v):
+    def __init__(self, instruction):
+        super().__init__(instruction) 
+    
+    def getOutput(self):
+        location = self.instruction[1]
+        self.validate()
+
+        if self.isa0(location):
+            self.seta0(location)
+            location = "a0"
+        if self.isa0(location[1:]) and location[0] == "*":
+            self.seta0(location[1:])
+            location = "*a0"
+
+        self.output += "mov ds, a0\njmp"
+        return self.output
 
 class INT:
     instruction = []
@@ -218,18 +255,28 @@ class mov(Instruction):
         
         r1 = self.instruction[1]
         r2 = self.instruction[3]
+        r1p = r1[0] == "*"
+        r2p = r2[0] == "*"
 
-        if r1[0] == "*":
-            r1 = r1[1:]
-        if r2[0] == "*":
-            r2 = r2[1:]
+        r1r, r2r = r1, r2
+
+        if r1p: r1r = r1r[1:]
+        if r2p: r2r = r2r[1:]
+
+        if r1p:
+            if r1r not in registerList and r1r not in labels and not r1r.isdigit():
+                print("value is not valid")
+                exit()
+        else:
+            if r1r not in registerList:
+                print("value must be a register")
+                exit()
         
-        if r1 not in registerList:
-            print(f"{r1} is not a valid register")
+        if r2r not in registerList and r2r not in labels and not r2r.isdigit() and not (r2r[0] == "'" and r2r[-1] == "'"):
+            print("value {r2r} is not valid")
             exit()
-        if r2 not in registerList and not r2.isdigit() and r2 not in labels:
-            print(f"{r2} is not a valid register or number")
-            exit()
+
+        
     def getOutput(self):
         self.validate()
         r1 = self.instruction[1]
@@ -282,6 +329,8 @@ class TokenSeperator:
             self.tokenList.append(INT(parts))
         elif parts[1] == ":":
             self.tokenList.append(Label(parts))
+        elif parts[0] == "jmp":
+            self.tokenList.append(jmp(parts))
 
         self.proceed()
 
@@ -313,7 +362,6 @@ def main(argc, argv):
 
     # runs lexer and stores output
     parts = lexer.start()
-    print(parts)
 
     # creates tokenSeperator object 
     tokenSeperator = TokenSeperator(parts);
