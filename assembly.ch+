@@ -1,0 +1,3 @@
+char: db 'E'
+mov ax,*char
+int 1
