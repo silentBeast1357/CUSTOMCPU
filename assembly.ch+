@@ -1,6 +1,10 @@
-loop:
-    mov ax, 'E'
-    int 1
-    mov ax, 10
-    int 1
-jmp loop
+main:
+    mov ax,0
+    loop:
+        int 2
+        add ax,1
+        mov bx,ax
+        mov ax,10
+        int 1
+        mov ax,bx
+    jmp loop

@@ -171,6 +171,37 @@ class Instruction1v(Instruction):
             print("Value is not a register, label or a number")
             exit()
 
+class Instruction2v2(Instruction2v):
+    name = ""
+    def getOutput(self):
+        self.validate()
+        
+        r1 = self.instruction[1]
+        r2 = self.instruction[3]
+        r1p = r1[0] == "*"
+        r2p = r2[0] == "*"
+        r1r = r1
+        r2r = r2
+
+        if r1p:
+            r1r = r1[1:]
+        if r2p:
+            r2r = r2[1:]
+        
+        if self.isa0(r2r):
+            self.seta0(r2r)
+
+            r2 = ""
+
+            if r2p : r2 = "*"
+            r2 += "a0"
+        
+        self.output += f"{self.name} {r1}, {r2}\n"
+        return self.output
+
+class add(Instruction2v2):
+    name = "add"
+
 class db:
     output = ""
     instruction = []
@@ -331,6 +362,8 @@ class TokenSeperator:
             self.tokenList.append(Label(parts))
         elif parts[0] == "jmp":
             self.tokenList.append(jmp(parts))
+        elif parts[0] == "add":
+            self.tokenList.append(add(parts))
 
         self.proceed()
 
