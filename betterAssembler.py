@@ -229,6 +229,19 @@ class push(Instruction1v2):
 class pop(Instruction1v2):
     name = "pop"
 
+class call(Instruction1v2):
+    name = "call"
+
+class ret:
+    def __init__(self, parts) : self.parts = parts
+
+    def getOutput(self):
+        if len(self.parts) != 1:
+            print("Error, too many opperands")
+            exit()
+        
+        return "ret\n"
+
 class db:
     output = ""
     instruction = []
@@ -397,6 +410,10 @@ class TokenSeperator:
             self.tokenList.append(pop(parts))
         elif parts[0] == "push":
             self.tokenList.append(push(parts))
+        elif parts[0] == "call":
+            self.tokenList.append(call(parts))
+        elif parts[0] == "ret":
+            self.tokenList.append(ret(parts))
 
         self.proceed()
 
