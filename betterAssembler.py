@@ -199,8 +199,35 @@ class Instruction2v2(Instruction2v):
         self.output += f"{self.name} {r1}, {r2}\n"
         return self.output
 
+class Instruction1v2(Instruction1v):
+    name = ""
+
+    def getOutput(self):
+        r1 = self.instruction[1]
+        r1p = self.instruction[1] == "*"
+        r1r = r1 
+
+        if r1p : r1r = r1[1:]
+
+        if self.isa0(r1r):
+            self.seta0(r1r)
+
+            r1 = ""
+            if r1p : r1 = "*"
+            r1 += "a0"
+        
+        self.output += f"{self.name} {r1}\n"
+        return self.output
+
 class add(Instruction2v2):
     name = "add"
+class sub(Instruction2v2):
+    name = "sub"
+
+class push(Instruction1v2):
+    name = "push"
+class pop(Instruction1v2):
+    name = "pop"
 
 class db:
     output = ""
@@ -364,6 +391,12 @@ class TokenSeperator:
             self.tokenList.append(jmp(parts))
         elif parts[0] == "add":
             self.tokenList.append(add(parts))
+        elif parts[0] == "sub":
+            self.tokenList.append(sub(parts))
+        elif parts[0] == "pop":
+            self.tokenList.append(pop(parts))
+        elif parts[0] == "push":
+            self.tokenList.append(push(parts))
 
         self.proceed()
 

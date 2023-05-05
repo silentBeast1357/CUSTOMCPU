@@ -1,10 +1,19 @@
+stack:
+    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+stackEnd:
+
+mov sp, stackEnd
+sub sp, 1
+
+jmp main
+
 main:
-    mov ax,0
     loop:
         int 2
-        add ax,1
-        mov bx,ax
+        push ax
         mov ax,10
         int 1
-        mov ax,bx
+        pop ax
+
+        add ax,1
     jmp loop

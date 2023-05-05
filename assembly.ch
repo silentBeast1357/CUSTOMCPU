@@ -1,15 +1,36 @@
-main:
+stack:
 0
-mov ax, a0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+stackEnd:
+stackEnd
+mov sp, a0
+1
+sub sp, a0
+main
+mov ds, a0
+jmpmain:
 loop:
 int 2
-1
-add ax, a0
-mov bx, ax
+push ax
 10
 mov ax, a0
 int 1
-mov ax, bx
+pop ax
+1
+add ax, a0
 loop
 mov ds, a0
 jmp
