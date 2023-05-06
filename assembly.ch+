@@ -1,0 +1,41 @@
+stack: db 0,0,0,0,0,0,0,0,0,0
+stackEnd:
+
+mov sp,stackEnd
+sub sp,1
+
+jmp main
+
+true  : db 'T','r','u','e',10,0
+false : db 'F','a','l','s','e',10,0
+
+print:
+    push ax
+    push cx
+
+    mov cx, ax
+
+    print_loop:
+        mov ax, *cx 
+        or ax, ax
+        jz print_end
+
+        int 1
+        add cx,1
+        jmp print_loop
+    print_end:
+        pop cx
+        pop ax
+        ret
+
+main:
+    mov ax, 100 
+    if ax g 10 jmp success
+fail:
+    mov ax, false
+    call print
+    int 60
+success:
+    mov ax, true
+    call print
+    int 60

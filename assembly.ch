@@ -5,6 +5,10 @@ stack:
 0
 0
 0
+0
+0
+0
+0
 stackEnd:
 stackEnd
 mov sp, a0
@@ -13,12 +17,19 @@ sub sp, a0
 main
 mov ds, a0
 jmp
-text:
-72
-69
-76
-76
-79
+true:
+84
+114
+117
+101
+10
+0
+false:
+70
+97
+108
+115
+101
 10
 0
 print:
@@ -42,7 +53,21 @@ pop cx
 pop ax
 ret
 main:
-text
+100
+mov ax, a0
+success
+mov ds, a0
+10
+jg ax, a0
+fail:
+false
+mov ax, a0
+print
+mov ds, a0
+call
+int 60
+success:
+true
 mov ax, a0
 print
 mov ds, a0

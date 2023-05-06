@@ -414,6 +414,65 @@ class mov(Instruction):
         self.output += f"mov {r1}, {r2}\n"
         return self.output
 
+class IF(Instruction):
+    def __init__(self, instruction):
+        super().__init__(instruction)
+    
+    comparisions = {
+        "e":"je",
+        "ne":"jne",
+        "g":"jg",
+        "ge":"jge",
+        "l":"jl",
+        "le":"jle"
+    }
+    
+    def validate(self):
+        if len(self.instruction) != 6:
+            print("Invalid format")
+            exit()
+        if self.instruction[1] not in registerList:
+            print(f"{self.instruction[1]} is not a register.")
+            exit()
+
+        if self.instruction[2] not in list(self.comparisions):
+            print(f"Invalid comparision {self.instruction[2]}")
+            exit()
+        
+        if self.instruction[4] != "jmp":
+            print("Missing keyword \"jmp\".")
+            exit()
+        
+        if self.instruction[3] not in registerList and not self.isa0(self.instruction[3][1:] if self.instruction[3][0] == "*" else self.instruction[3]):
+            print(f"{self.instruction[3]} is not valid")
+            exit()
+    
+    def getOutput(self):
+        self.validate()
+
+        r1 = self.instruction[1]
+        r2 = self.instruction[3]
+        location = self.instruction[5]
+
+        r2p = r2[0] == "*" 
+        locationp = location[0] == "*"
+
+        r2r = r2[1:] if r2p else r2
+        locationr = location[1:] if locationp else location
+
+        if self.isa0(locationr):
+            self.seta0(locationr)
+            location = "*a0" if locationp else "a0"
+        self.output += f"mov ds, {location}\n"
+
+        if self.isa0(r2r):
+            self.seta0(r2r)
+            r2 = "*a0" if r2p else "a0"
+        self.output += f"{self.comparisions[self.instruction[2]]} {r1}, {r2}\n"
+        return self.output
+
+
+
 
 # Token seperator class
 # needed to sort the parts into commands
@@ -476,6 +535,8 @@ class TokenSeperator:
             self.tokenList.append(jz(parts))
         elif parts[0] == "jnz":
             self.tokenList.append(jnz(parts))
+        elif parts[0] == "if":
+            self.tokenList.append(IF(parts))
 
         self.proceed()
 
