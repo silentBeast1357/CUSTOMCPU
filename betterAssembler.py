@@ -223,7 +223,10 @@ class add(Instruction2v2):
     name = "add"
 class sub(Instruction2v2):
     name = "sub"
-
+class mul(Instruction1v2):
+    name = "mul"
+class div(Instruction1v2):
+    name = "div"
 class push(Instruction1v2):
     name = "push"
 class pop(Instruction1v2):
@@ -470,10 +473,18 @@ class IF(Instruction):
             r2 = "*a0" if r2p else "a0"
         self.output += f"{self.comparisions[self.instruction[2]]} {r1}, {r2}\n"
         return self.output
-
-
-
-
+class xor(Instruction2v2):
+    name = "xor"
+class nor(Instruction2v2):
+    name = "nor"
+class AND(Instruction2v2):
+    name = "and"
+class nand(Instruction2v2):
+    name = "nand"
+class lshft(Instruction2v2):
+    name = "<<"
+class rshft(Instruction2v2):
+    name = ">>"
 # Token seperator class
 # needed to sort the parts into commands
 class TokenSeperator:
@@ -537,6 +548,22 @@ class TokenSeperator:
             self.tokenList.append(jnz(parts))
         elif parts[0] == "if":
             self.tokenList.append(IF(parts))
+        elif parts[0] == "xor":
+            self.tokenList.append(xor(parts))
+        elif parts[0] == "nor":
+            self.tokenList.append(nor(parts))
+        elif parts[0] == "and":
+            self.tokenList.append(AND(parts))
+        elif parts[0] == "nand":
+            self.tokenList.append(nand(parts))
+        elif parts[0] == "<<":
+            self.tokenList.append(lshft(parts))
+        elif parts[0] == ">>":
+            self.tokenList.append(rshft(parts))
+        elif parts[0] == "mul":
+            self.tokenList.append(mul(parts))
+        elif parts[0] == "div":
+            self.tokenList.append(div(parts))
 
         self.proceed()
 
