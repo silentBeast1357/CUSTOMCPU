@@ -1,3 +1,24 @@
+; Defines the stack
 stack:
     db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 stackEnd:
+
+; Sets stack pointer
+mov sp, stack
+sub sp, 1
+
+jmp main ; jumps to main
+
+num: db 11
+pNum: db 0
+
+main:
+    mov ax, pNum
+    mov bx, num
+    mov *ax, bx
+    
+    mov ax, *pNum
+    mov ax, *ax
+    int 2
+    
+    int 60
