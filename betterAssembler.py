@@ -229,9 +229,6 @@ class push(Instruction1v2):
 class pop(Instruction1v2):
     name = "pop"
 
-class call(Instruction1v2):
-    name = "call"
-
 class ret:
     def __init__(self, parts) : self.parts = parts
 
@@ -265,7 +262,7 @@ class db:
             value = values[index]
             if value.isdigit():
                 self.values.append(value)
-            elif value[0] == '\'' and value[-1] == '\'':
+            elif value[0] == '\'' and value[2] == '\'':
                 self.values.append(str(ord(value[1])))
             else:
                 print("Unknown part found")
@@ -275,6 +272,7 @@ class db:
         self.validate()
         for num in self.values:
             self.output += num + "\n"
+        self.values.clear()
         return self.output
 
 class jmp(Instruction1v):
@@ -292,9 +290,62 @@ class jmp(Instruction1v):
             self.seta0(location[1:])
             location = "*a0"
 
-        self.output += "mov ds, a0\njmp"
+        self.output += f"mov ds, {location}\njmp\n"
+        return self.output
+class jz(Instruction1v):
+    def __init__(self, instruction):
+        super().__init__(instruction) 
+    
+    def getOutput(self):
+        location = self.instruction[1]
+        self.validate()
+
+        if self.isa0(location):
+            self.seta0(location)
+            location = "a0"
+        if self.isa0(location[1:]) and location[0] == "*":
+            self.seta0(location[1:])
+            location = "*a0"
+
+        self.output += f"mov ds, {location}\njz\n"
+        return self.output
+class jnz(Instruction1v):
+    def __init__(self, instruction):
+        super().__init__(instruction) 
+    
+    def getOutput(self):
+        location = self.instruction[1]
+        self.validate()
+
+        if self.isa0(location):
+            self.seta0(location)
+            location = "a0"
+        if self.isa0(location[1:]) and location[0] == "*":
+            self.seta0(location[1:])
+            location = "*a0"
+
+        self.output += f"mov ds, {location}\njnz\n"
         return self.output
 
+class call(Instruction1v):
+    def __init__(self, instruction):
+        super().__init__(instruction) 
+    
+    def getOutput(self):
+        location = self.instruction[1]
+        self.validate()
+
+        if self.isa0(location):
+            self.seta0(location)
+            location = "a0"
+        if self.isa0(location[1:]) and location[0] == "*":
+            self.seta0(location[1:])
+            location = "*a0"
+
+        self.output += f"mov ds, {location}\ncall\n"
+        return self.output
+class OR(Instruction2v2):
+    name = "or"
 class INT:
     instruction = []
     def __init__(self, instruction):
@@ -344,7 +395,7 @@ class mov(Instruction):
                 exit()
         
         if r2r not in registerList and r2r not in labels and not r2r.isdigit() and not (r2r[0] == "'" and r2r[-1] == "'"):
-            print("value {r2r} is not valid")
+            print(f"value {r2r} is not valid")
             exit()
 
         
@@ -362,6 +413,7 @@ class mov(Instruction):
         
         self.output += f"mov {r1}, {r2}\n"
         return self.output
+
 
 # Token seperator class
 # needed to sort the parts into commands
@@ -392,14 +444,18 @@ class TokenSeperator:
     def process(self):
         parts = self.getPart()
 
+        if len(parts) == 2:
+            if parts[1] == ":":
+                self.tokenList.append(Label(parts))
+                self.proceed()
+                return
+
         if parts[0] == "mov":
             self.tokenList.append(mov(parts))
         elif parts[0] == "db":
             self.tokenList.append(db(parts))
         elif parts[0] == "int":
             self.tokenList.append(INT(parts))
-        elif parts[1] == ":":
-            self.tokenList.append(Label(parts))
         elif parts[0] == "jmp":
             self.tokenList.append(jmp(parts))
         elif parts[0] == "add":
@@ -414,6 +470,12 @@ class TokenSeperator:
             self.tokenList.append(call(parts))
         elif parts[0] == "ret":
             self.tokenList.append(ret(parts))
+        elif parts[0] == "or":
+            self.tokenList.append(OR(parts))
+        elif parts[0] == "jz":
+            self.tokenList.append(jz(parts))
+        elif parts[0] == "jnz":
+            self.tokenList.append(jnz(parts))
 
         self.proceed()
 
@@ -421,9 +483,10 @@ class TokenSeperator:
     # the function the start the seperator
     def start(self):
         for line in self.lines:
-            if line[1] == ":":
-                label = Label(line)
-                labels.append(label.name[0])
+            if len(line) == 2:
+                if line[1] == ":":
+                    label = Label(line)
+                    labels.append(label.name[0])
         while self.index < len(self.lines):
             self.process()
         return self.tokenList
