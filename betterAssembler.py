@@ -564,6 +564,9 @@ class TokenSeperator:
             self.tokenList.append(mul(parts))
         elif parts[0] == "div":
             self.tokenList.append(div(parts))
+        else:
+            print(f"Instruction {parts[0]} does not exist")
+            exit()
 
         self.proceed()
 
