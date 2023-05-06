@@ -414,21 +414,6 @@ int32_t main(int32_t argc, char** argv)
             }
         }
 
-        if (doDebugMode == 1)
-        {
-            for (int i=0;i<16;i++)
-            {
-                cout << registers[i] << ", ";
-            }
-            cout << endl;
-
-            for (int i=0;i<dInstructions.size();i++)
-            {
-                cout << dInstructions[i].instruction << ",";
-            }
-            cout << endl;
-        }
-
         if (current.opcode=="F") // int
         {
             if (current.opperandI == 60)

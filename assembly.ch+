@@ -1,0 +1,4 @@
+mov ax,10
+mul 10
+int 2
+int 60
