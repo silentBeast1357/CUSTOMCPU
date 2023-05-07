@@ -442,6 +442,12 @@ int32_t main(int32_t argc, char** argv)
                 }
                 delete[] input;
             }
+            else if (current.opperandI == 4)
+            {
+                uint64_t input;
+                cin >> input;
+                registers[1] = input;
+            }
         }
         line++;
     }

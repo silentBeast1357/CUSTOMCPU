@@ -1,39 +1,6 @@
-stack:
-    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-stackEnd:
-
-mov sp,stackEnd
-sub sp,1
-
-jmp main
-
-print:
-    push ax
-    push cx
-
-    mov cx, ax
-
-    print_loop:
-        mov ax, *cx 
-        or ax, ax
-        jz print_end
-
-        int 1
-        add cx,1
-        jmp print_loop
-    print_end:
-        pop cx
-        pop ax
-        ret
-
-text:
-    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-
-main:
-    mov bx,15
-    mov ax,text
-    int 3
-
-    call print
-
-    int 60
+int 4
+mov bx, ax
+int 4
+add ax, bx
+int 2
+int 60
