@@ -1,24 +1,39 @@
-; Defines the stack
 stack:
-    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 stackEnd:
 
-; Sets stack pointer
-mov sp, stack
-sub sp, 1
+mov sp,stackEnd
+sub sp,1
 
-jmp main ; jumps to main
+jmp main
 
-num: db 11
-pNum: db 0
+print:
+    push ax
+    push cx
+
+    mov cx, ax
+
+    print_loop:
+        mov ax, *cx 
+        or ax, ax
+        jz print_end
+
+        int 1
+        add cx,1
+        jmp print_loop
+    print_end:
+        pop cx
+        pop ax
+        ret
+
+text:
+    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 main:
-    mov ax, pNum
-    mov bx, num
-    mov *ax, bx
-    
-    mov ax, *pNum
-    mov ax, *ax
-    int 2
-    
+    mov bx,15
+    mov ax,text
+    int 3
+
+    call print
+
     int 60

@@ -428,6 +428,20 @@ int32_t main(int32_t argc, char** argv)
             {
                 printf("%lu",registers[1]);
             }
+            else if (current.opperandI == 3)
+            {
+                uint32_t length = registers[2];
+                char* input = new char[length];
+                for (uint32_t i=0;i<length;i++)
+                    input[i] = 0;
+                fgets(input, length, stdin);
+
+                for (uint32_t i=registers[1];i-registers[1]<length;i++)
+                {
+                    dInstructions[i] = getInfo(itoh<uint64_t>(input[i-registers[1]],1));
+                }
+                delete[] input;
+            }
         }
         line++;
     }
